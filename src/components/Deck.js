@@ -1,6 +1,5 @@
 import React from 'react';
 import {View,Text,Animated,PanResponder,Dimensions} from 'react-native';
-import { duration } from 'moment';
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -68,7 +67,7 @@ class Deck extends React.Component{
                 return (
                     <Animated.View
                         key={item.key}
-                        style={this.getCardStyle()}
+                        style={[this.getCardStyle(),styles.cardStyle,{zIndex:100}]}
                         {...this.state.panResponder.panHandlers}
                     >
                         {this.props.renderCard(item)}
@@ -76,8 +75,12 @@ class Deck extends React.Component{
                 )
             }
 
-            return this.props.renderCard(item);
-        })
+            return (
+                <View key={item.key} style={[styles.cardStyle,{zIndex:5}]}>
+                    {this.props.renderCard(item)}
+                </View>
+            )
+        }).reverse()
     }
 
     forceSwipe(direction){
@@ -100,7 +103,7 @@ class Deck extends React.Component{
 
     render(){
         return (
-            <View>
+            <View style={styles.deckStyle}>
                 {this.renderCards()}
             </View>    
             
@@ -108,5 +111,15 @@ class Deck extends React.Component{
     }
 }
 
+
+const styles ={
+    cardStyle:{
+        position:'absolute',
+        // width:SCREEN_WIDTH
+    },
+    deckStyle:{
+        marginTop:15
+    }
+}
 
 export default Deck;
