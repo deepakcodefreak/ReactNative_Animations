@@ -1,8 +1,24 @@
 import React from 'react';
-import {View,Text,Animated} from 'react-native';
+import {View,Text,Animated,PanResponder} from 'react-native';
 
 
 class Deck extends React.Component{
+
+    constructor(props){
+
+        const position = new Animated.ValueXY()
+
+        super(props);
+        const panResponder = PanResponder.create({
+            onStartShouldSetPanResponder:()=>{return true;},
+            onPanResponderMove:(event,gesture)=>{
+                position.setValue({x:gesture.dx,y:gesture.dy})
+            },
+            onPanResponderRelease:()=>{}
+        })
+
+        this.state = {panResponder,position}
+    }
     renderCards(){
         return this.props.data.map((item)=>{
             return this.props.renderCard(item);
@@ -10,9 +26,9 @@ class Deck extends React.Component{
     }
     render(){
         return (
-            <View>
+            <Animated.View {...this.state.panResponder.panHandlers} style={this.state.position.getLayout()}>
                 {this.renderCards()}
-            </View>
+            </Animated.View>
         )
     }
 }
