@@ -1,5 +1,5 @@
 import React from 'react';
-import {View,Text,Animated,PanResponder,Dimensions} from 'react-native';
+import {View,Text,Animated,PanResponder,Dimensions,LayoutAnimation,UIManager} from 'react-native';
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -39,6 +39,17 @@ class Deck extends React.Component{
     }
 
 
+    componentWillUpdate(){
+        UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true)
+        LayoutAnimation.spring()
+    }
+
+    componentWillReceiveProps(newProps){
+        if(newProps.data !== this.props.data){
+            this.setState({index: 0})
+        }
+    }
+
     resetPosition(){
         Animated.spring(this.state.position,{toValue:{x:0,y:0}}).start();
     }
@@ -76,9 +87,9 @@ class Deck extends React.Component{
             }
 
             return (
-                <View key={item.key} style={[styles.cardStyle,{zIndex:5}]}>
+                <Animated.View key={item.key} style={[styles.cardStyle,{top:5*(i-this.state.index)},{zIndex:5}]}>
                     {this.props.renderCard(item)}
-                </View>
+                </Animated.View>
             )
         }).reverse()
     }
