@@ -16,10 +16,16 @@ class Deck extends React.Component{
             onPanResponderMove:(event,gesture)=>{
                 position.setValue({x:gesture.dx,y:gesture.dy})
             },
-            onPanResponderRelease:()=>{}
+            onPanResponderRelease:()=>{
+                this.resetPosition()
+            }
         })
 
         this.state = {panResponder,position}
+    }
+
+    resetPosition(){
+        Animated.spring(this.state.position,{toValue:{x:0,y:0}}).start();
     }
 
     getCardStyle(){
